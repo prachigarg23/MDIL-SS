@@ -44,8 +44,8 @@ Training commands for the Fine-tuning model, Multi-task (joint, offline) model a
 ### Pretrained Models
 coming soon
 #### Testing
-#### Tensorboard use
-#### T-SNE plots for segmentation
+<!-- #### Tensorboard use
+#### T-SNE plots for segmentation -->
 
 ## Citation
 `@article{garg2021multi,
