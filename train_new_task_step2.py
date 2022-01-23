@@ -1,44 +1,9 @@
 '''
-RAP-FT-dlr
-# for CS to BDD.
-# hard coded some things for step2 - BDD. Using differential lr for shared weights.
-In the RAPFT experiments, the shared weights are init from previous model. the RAP-current_task weights are randomly initialized. This is causing the shared weights to completely forget previous task and not learn properly.
-Training CS->BDD RAPFT model with: differential learning rate (dlr). Training {shared conv layers in the encoder} with a 10x lower learning rate than shared parameters, to help them learn.
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-This file does a finetuning + RAP style of training wherein,
-STEP 1:
--> init encoder with imagenet pretrained weights.
--> add the DS layers in encoder
--> train the entire architecture on CS without freezing any layers.
-STEP 2:
--> for BDD, add its DS layers.
-init:
-previous model into RAPCS + shared
-RAPCS into RAPBDD, Decoder_CS into Decoder_BDD, enc-BNCS into enc-BNBDD -----IMP---difference from main_RAP_FT_dlr.py---------------------
--> finetune entire archi except the DS layers for CS.
---------------------------------------------------------------------
-STEP 3: (later)
--> repeat the same for IDD
-
-The main_RAP.py file: RAP blocks with fixed, frozen encoder conv layers: here IL Ti is not dependent o IL Ti-1.
-But in this file, (RAP + FT) setting, each subsequent step is dependent on the previous steps. so init of IL Ti is from IL Ti-1.
-
-This Code file contains code for 2 types of models:
-1. RAPs
-
-2. BN - where encoder weights are common, fixed, imagenet pretrained encoder with DS BN layers; and decoder is DS. so train this setting also sequentially, adding new DSBN layers and decoder heads in each step
-
-nb_tasks:
-        task1: cityscapes
-        task2: BDD
-        task3: IDD
-this order doesn't change. its fixed. so pass dataloaders and task numbers respectively
+RAP_FT_KLD (proposed method) for step 2
+Example Dataset Setting: take model trained on CS, incrementally learn BDD. (CS->BDD)
+Trained using init scheme, differential learning rates and knowledge distillation as explained in Algorithm 1 of paper.
+compute KLD between {cs_curr, cs_old} - domain adaptive knowledge distillation between previous and current step CS model.
 '''
-# Sept 2017
-# Eduardo Romera
-#######################
-# individually loads all 3 datasets and handles them separately
-
 import os
 import random
 import time
@@ -201,10 +166,6 @@ def train(args, model, model_old):
     loader_val = DataLoader(dataset_val, num_workers=args.num_workers,
                             batch_size=args.batch_size, shuffle=False)
 
-    # dataset_val_cs = cityscapes(CS_datadir, co_transform_val, 'val')
-    # loader_val_cs = DataLoader(dataset_val_cs, num_workers=args.num_workers,
-    #                            batch_size=args.batch_size, shuffle=False)
-
     if args.dataset_old == 'cityscapes':
         print('loading CS as validation dataset, (old - step 1)')
         loader_val_old = DataLoader(dataset_cs_val, num_workers=args.num_workers,
@@ -226,9 +187,7 @@ def train(args, model, model_old):
     if args.cuda:
         weight = weight.cuda()
         weight_old = weight_old.cuda()
-        # weight_city = weight_city.cuda()
 
-    # criterion_city = CrossEntropyLoss2d(weight_city)
     criterion_old = CrossEntropyLoss2d(weight_old)
     criterion = CrossEntropyLoss2d(weight)
     print(type(criterion))
@@ -282,11 +241,6 @@ def train(args, model, model_old):
     kl_loss = torch.nn.KLDivLoss()
     kl_loss = kl_loss.cuda()
 
-    # print('\n\n\n')
-    # for name, m in model.named_parameters():
-    #     print(name, m.requires_grad)
-
-    # scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.5) # set up scheduler     ## scheduler 1
     def lambda1(epoch): return pow((1-((epoch-1)/args.num_epochs)), 0.9)  # scheduler 2
     scheduler = lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda1)  # scheduler 2
 
@@ -360,7 +314,7 @@ def train(args, model, model_old):
 
             if (doIouTrain):
                 iouEvalTrain.addBatch(outputs.max(1)[1].unsqueeze(1).data, targets.data)
-                #print ("Time to add confusion matrix: ", time.time() - start_time_iou)
+                # print ("Time to add confusion matrix: ", time.time() - start_time_iou)
 
             if args.steps_loss > 0 and step % args.steps_loss == 0:
                 average = sum(epoch_loss) / len(epoch_loss)

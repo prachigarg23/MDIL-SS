@@ -3,6 +3,8 @@ This is the Pytorch implementation of our work "Multi-Domain Incremental Learnin
 
 Full paper: http://arxiv.org/abs/2110.12205
 
+**Model checkpoints and evaluation notebook now out for easy reproducibility!**
+
 ![image](final-main-diagram-wacv1.png)
 
 ## Requirements
@@ -42,17 +44,21 @@ _Step 3: Learn CS|BDD model on IDD_ \
 Training commands for the Fine-tuning model, Multi-task (joint, offline) model and Single-task (independent models) can be found in the bash scripts inside `trainer_files` directory. Other ablation experiment files can be requested.
 
 ### Pretrained Models
-coming soon
+Our checkpoints for (1) Proposed model, (2) Fine-tuning, and (3) Single-Task baselines on ERFNet for CS, BDD and IDD can be found [here](https://drive.google.com/drive/folders/1RrWlm4hismw9srbQJ-Q_-cs_dHUwISqq?usp=sharing). Checkpoints for other settings (like BDD->CS or IDD->BDD) can be released if required.
+
 #### Testing
-#### Tensorboard use
+Refer to jupyter notebook `Evaluation_Notebook.ipynb` for evaluation of our models. Make sure to set suitable paths for dataset, models and checkpoints.
+
 #### T-SNE plots for segmentation
+Refer to file `Plot_Tsne_Notebook.ipynb` for T-sne plots. We plot the output of the encoder before and after step 2. We compare finetuning versus our method.
 
 ## Citation
-`@article{garg2021multi,
+`@inproceedings{garg2022multi,
   title={Multi-Domain Incremental Learning for Semantic Segmentation},
   author={Garg, Prachi and Saluja, Rohit and Balasubramanian, Vineeth N and Arora, Chetan and Subramanian, Anbumani and Jawahar, CV},
-  journal={arXiv preprint arXiv:2110.12205},
-  year={2021}
+  booktitle={Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision},
+  pages={761--771},
+  year={2022}
 }
 `
 

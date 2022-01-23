@@ -1,21 +1,9 @@
 '''
 RAP_FT_KLD for step 3
-Dataset Setting: take model trained on CS|BDD, do CS|BDD->IDD
+Example Dataset Setting: take model trained on CS|BDD, do CS|BDD->IDD
 compute KLD between {cs_curr, cs_old} and {bdd_curr, bdd_old}. sum them up and use lambdac=0.1 on the sum.
 previous task model CS|BDD in memory and current model being trained on IDD in memory.
-
-we can compute KLD only between {bdd_curr, bdd_old} but in this file we try KLD between all old models.
-
-# 15th August.
-old dataset knowledge comes into play only during validation.
-init is independent of that. it will be correct as long as you give right checkpoint for init.
-
 '''
-# Sept 2017
-# Eduardo Romera
-#######################
-# individually loads all 3 datasets and handles them separately
-
 import os
 import random
 import time

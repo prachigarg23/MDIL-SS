@@ -1,36 +1,10 @@
 '''
-# edited to train step3 - IDD.
-getting cuda out of memory. so not keeping entire model for training. loading only shared weights and adding IDD DS weights and training, CS & BDD DS weights are not being loaded. they will be loaded later.
--> init shared enc parts using "../save/Adaptations/RAP_FT/stepbdd/model_best_BDD_erfnet_RA_parallel_150_6RAP_FT_step2.pth.tar"
--> train as step 0 model on IDD with 27 classes. so the decoder and DS parts will get labeled as .0.
--> after training, transfer the IDD-DS parts to another model where .0. becomes .2.; transfer the BDD checkpoint .0. to .0. and .1. to .1. in the new model
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-This file does a finetuning + RAP style of training wherein,
+Training protocol for 1st dataset as per our algorithm: (This helps reparameterize the architecture in subsequent steps)
 -> init encoder with imagenet pretrained weights.
 -> add the DS layers in encoder
--> train the entire architecture on CS without freezing any layers.
--> for BDD, add its DS layers and finetune entire archi except the DS layers for CS.
--> repeat the same for IDD
+-> train the entire architecture on 1st step dataset without freezing any layers.
 
-The main_RAP.py file: RAP blocks with fixed, frozen encoder conv layers: here IL Ti is not dependent o IL Ti-1.
-But in this file, (RAP + FT) setting, each subsequent step is dependent on the previous steps. so init of IL Ti is from IL Ti-1.
-
-This Code file contains code for 2 types of models:
-1. RAPs
-
-2. BN - where encoder weights are common, fixed, imagenet pretrained encoder with DS BN layers; and decoder is DS. so train this setting also sequentially, adding new DSBN layers and decoder heads in each step
-
-nb_tasks:
-        task1: cityscapes
-        task2: BDD
-        task3: IDD
-this order doesn't change. its fixed. so pass dataloaders and task numbers respectively
 '''
-# Sept 2017
-# Eduardo Romera
-#######################
-# individually loads all 3 datasets and handles them separately
-
 import os
 import random
 import time
