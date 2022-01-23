@@ -3,7 +3,7 @@ This is the Pytorch implementation of our work "Multi-Domain Incremental Learnin
 
 Full paper: http://arxiv.org/abs/2110.12205
 
-**Model checkpoints and evaluation notebook now out for easy reproducibility!**
+[New] **Model checkpoints and evaluation notebook now out for easy reproducibility!**
 
 ![image](final-main-diagram-wacv1.png)
 
