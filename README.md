@@ -47,10 +47,15 @@ Training commands for the Fine-tuning model, Multi-task (joint, offline) model a
 Our checkpoints for (1) Proposed model, (2) Fine-tuning, and (3) Single-Task baselines on ERFNet for CS, BDD and IDD can be found [here](https://drive.google.com/drive/folders/1RrWlm4hismw9srbQJ-Q_-cs_dHUwISqq?usp=sharing). Checkpoints for other settings (like BDD->CS or IDD->BDD) can be released if required.
 
 #### Testing
+<<<<<<< HEAD
 Refer to jupyter notebook `Evaluation_Notebook.ipynb` for evaluation of our models. Make sure to set suitable paths for dataset, models and checkpoints.
 
 #### T-SNE plots for segmentation
 Refer to file `Plot_Tsne_Notebook.ipynb` for T-sne plots. We plot the output of the encoder before and after step 2. We compare finetuning versus our method.
+=======
+<!-- #### Tensorboard use
+#### T-SNE plots for segmentation -->
+>>>>>>> 676bfbaa8c0c61ec83120a27a05de83d932703d0
 
 ## Citation
 `@inproceedings{garg2022multi,
